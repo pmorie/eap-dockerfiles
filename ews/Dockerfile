@@ -2,9 +2,7 @@ FROM 10.64.27.125:5000/vpavlin/rhel6:latest
 
 # Update the system
 RUN yum -y update
-# Install unzip and apr-util
 RUN yum -y install unzip apr-util mailcap
-# Cleanup the yum database
 RUN yum clean all
 
 ADD jboss-ews-httpd-2.0.1-RHEL6-x86_64.zip /opt/
@@ -26,5 +24,8 @@ RUN rm /opt/jboss-ews-2.0/httpd/conf.d/auth_kerb.conf
 
 # Run the postinstall script
 RUN cd /opt/jboss-ews-2.0/httpd && ./.postinstall
+
+USER apache
+EXPOSE 80
 
 CMD ["/opt/jboss-ews-2.0/httpd/sbin/httpd", "-DFOREGROUND", "-f", "/opt/jboss-ews-2.0/httpd/conf/httpd.conf"]
